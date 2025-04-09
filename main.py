@@ -38,28 +38,43 @@ def purchaseableItems():
     for file in file_paths.keys():
         try:
             confidence_level = 0
-            if file_paths[file]["folder"] in ["icons\\misc"]:
-                confidence_level = 0.90
-                purchase_location = pyautogui.locateAll(file_paths[file]["filepath"], "my_screenshot.png", confidence=confidence_level)
-                purchase_location = list(purchase_location)
-                if check_mysteryboxes(file, file_paths, purchase_location):
-                    continue
-                else:
-                    raise pyautogui.ImageNotFoundException
-            elif file_paths[file]["folder"] in ["icons\\offerings\\fog"]:
+            if file_paths[file]["folder"] in ["icons\\offerings\\fog"]:
                 confidence_level = 0.97
             elif file_paths[file]["folder"] in ["icons\\items"]:
                 confidence_level = 0.95
+            elif file_paths[file]["folder"] in ["icons\\items\\flashlight"]:
+                confidence_level = 0.80
             else:
                 confidence_level = 0.90
+
             purchase_location = pyautogui.locateAll(file_paths[file]["filepath"], "my_screenshot.png", confidence=confidence_level)
             purchase_location = list(purchase_location)
+
         except pyscreeze.ImageNotFoundException as e:
             purchase_location = None
         
         if purchase_location is not None:
             for i in purchase_location:
+                y = i[1]
                 i = pyautogui.center(i)
+                x = i[0]
+                if file == "brown_mystery_box":
+                    if not (pyautogui.pixelMatchesColor(int(x), int(y), (56, 43, 33), tolerance=20) or pyautogui.pixelMatchesColor(int(x), int(y), (92, 68, 50), tolerance=20)): # Non-grayed out: (92, 68, 50)
+                        continue
+                elif file == "yellow_mystery_box":
+                    if not (pyautogui.pixelMatchesColor(int(x), int(y), (106, 87, 29), tolerance=20) or pyautogui.pixelMatchesColor(int(x), int(y), (203, 164, 45), tolerance=20)): # (203, 164, 45)
+                        continue
+                elif file == "green_mystery_box":
+                    if not pyautogui.pixelMatchesColor(int(x), int(y), (15, 106, 27), tolerance=50):
+                        # print(pyautogui.pixel(int(x), int(y)))
+                        continue
+                elif file == "purple_mystery_box":
+                    if not pyautogui.pixelMatchesColor(int(x), int(y), (77, 38, 81), tolerance=20):
+                        continue
+                elif file == "pink_mystery_box":
+                    if not pyautogui.pixelMatchesColor(int(x), int(y), (0, 0, 0), tolerance=10):
+                        continue
+
                 if file_paths[file]["amount"] != []:
                     for k in file_paths[file]["amount"]:
                         point1 = np.array(i)
