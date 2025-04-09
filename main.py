@@ -107,16 +107,31 @@ def pickPriority():
     In the future this will check for the pickprio.csv file, if it exists will get the information from it.
     If it doesn't exist, it will run through and create one through CLI command prompts.
     '''
-    prioList = ["bloodsense_map", "bloodshot_eye", "anti_hemorrhagic_syringe", "brand_new_part", "odd_bulb", "brown_mystery_box", "green_mystery_box", "purple_medkit", "jigsaw_piece", "auto_purchase"]
+    # prioList = ["bloodsense_map", "bloodshot_eye", "anti_hemorrhagic_syringe", "brand_new_part", "odd_bulb", "brown_mystery_box", "green_mystery_box", "purple_medkit", "jigsaw_piece", "auto_purchase"]
+    prioList = []
+    user_input = "None"
+    while True:
+        # This will get better over time I promise Ian hahaha
+        user_input = input("Enter the name of an item to add it to the list. Make sure it is all lowercase, and uses _ instead of spaces\n")
+        if user_input == "":
+            break
+        else:
+            prioList.append(user_input)
+    
+    prioList.append("auto_purchase")
+
+        
     return prioList
 
 
 def main():
+
+    prioList = pickPriority()
+
     for i in range(3):
         time.sleep(1)
         print(i)
-    
-    prioList = pickPriority()
+
     while not outOfBloodies():
         file_paths = purchaseableItems()
         selectPurchase(file_paths, prioList)
