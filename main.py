@@ -85,6 +85,8 @@ def purchaseableItems():
                 else:
                     file_paths[file]["amount"].append(i)
     
+    return file_paths
+
     # for file in file_paths:
     #     if file_paths[file]["amount"] != []:
     #         for i in file_paths[file]["amount"]:
@@ -99,38 +101,35 @@ def purchaseableItems():
 
 
 
-def selectPurchase():
-    pyautogui.screenshot('my_screenshot.png')
+def selectPurchase(file_paths, prioList):
+    for item in prioList:
+        for file in file_paths:
+            if file == item and file_paths[file]["amount"] != []:
+                for val in file_paths[file]["amount"]:
+                    time.sleep(2)
+                    pyautogui.moveTo(val)
+                    pyautogui.mouseDown()
+                    time.sleep(0.1)
+                    pyautogui.mouseUp()
 
-    file_paths = []
-    for folder, subfolders, filenames in os.walk('icons'):
-        for filename in filenames:
-            file_path = os.path.join(folder, filename)
-            file_paths.append(file_path)
-    print(file_paths)
-
-    try:
-        purchase_location = pyautogui.locate("image.png", "my_screenshot.png", confidence=0.7)
-    except pyautogui.ImageNotFoundException as e:
-        purchase_location = None
-    
-    if purchase_location is not None:
-        print("Success!")
-        purchase_location = pyautogui.center(purchase_location)
-        pyautogui.click(purchase_location)
-    else:
-        print("failure!")
 
 def pickPriority():
-    pass
+    # Improve on system later, create a way to interact with fileIO, allow CLI question system for list
+    prioList = ["bloodsense_map", "bloodshot_eye", "anti_hemorrhagic_syringe", "brand_new_part", "odd_bulb", "brown_mystery_box", "green_mystery_box", "purple_medkit", "jigsaw_piece", "auto_purchase"]
+    return prioList
+
 
 def main():
-    for i in range(0):
+    for i in range(3):
         time.sleep(1)
         print(i)
     
-    # selectPurchase()
-    purchaseableItems()
+    while True:
+        file_paths = purchaseableItems()
+        prioList = pickPriority()
+        selectPurchase(file_paths, prioList)
+        time.sleep(2)
+        pyautogui.moveTo(0, 1000)
     
 
 if __name__ in "__main__":
