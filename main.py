@@ -18,7 +18,7 @@ def outOfBloodies():
     '''
     return False
 
-def purchaseableItems():
+def purchaseableItems(priolist):
     '''
     This will go through each icon on the screen, and determine what is purchaseable.
     It will add it to the dictionary file_paths, where it stores the amount of each item
@@ -29,8 +29,11 @@ def purchaseableItems():
     file_paths = {}
     for folder, subfolders, filenames in os.walk('icons'):
         for filename in filenames:
-            file_path = os.path.join(folder, filename)
-            file_paths[filename[:-4]] = {"filepath": file_path, "folder": folder, "amount": []}
+            print(filenames)
+            if filename in priolist:
+                print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
+                file_path = os.path.join(folder, filename)
+                file_paths[filename[:-4]] = {"filepath": file_path, "folder": folder, "amount": []}
 
     for file in file_paths.keys():
         try:
@@ -92,6 +95,8 @@ def selectPurchase(file_paths, prioList):
     Using both of these it will purchase items in order of what the user wants.
     '''
     for item in prioList:
+        print(f"item = {item}")
+        print(f"paths = {file_paths}")
         for file in file_paths:
             if file == item and file_paths[file]["amount"] != []:
                 for val in file_paths[file]["amount"]:
@@ -108,7 +113,8 @@ def pickPriority():
     If it doesn't exist, it will run through and create one through CLI command prompts.
     '''
     # prioList = ["bloodsense_map", "bloodshot_eye", "anti_hemorrhagic_syringe", "brand_new_part", "odd_bulb", "brown_mystery_box", "green_mystery_box", "purple_medkit", "jigsaw_piece", "auto_purchase"]
-    prioList = []
+    prioList = ["iconAddon_iridescentBlightTag.png", "iconAddon_compoundThirtyThree.png", "bloody_party_streamers.png", "iconAddon_blightedCrow.png", "iconAddon_blightedRat.png"]
+    # prioList = []
     user_input = "None"
     while True:
         # This will get better over time I promise Ian hahaha
@@ -118,7 +124,7 @@ def pickPriority():
         else:
             prioList.append(user_input)
     
-    prioList.append("auto_purchase")
+    prioList.append("auto_purchase.png")
 
         
     return prioList
@@ -133,7 +139,7 @@ def main():
         print(i)
 
     while not outOfBloodies():
-        file_paths = purchaseableItems()
+        file_paths = purchaseableItems(prioList)
         selectPurchase(file_paths, prioList)
         time.sleep(2)
         pyautogui.moveTo(0, 1000)
